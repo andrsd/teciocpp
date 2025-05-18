@@ -1,0 +1,21 @@
+set(TECIOCPP_VERSION @PROJECT_VERSION@)
+
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/teciocpp-targets.cmake")
+
+check_required_components(teciocpp)
+
+find_library(TECIOCPP_LIBRARY NAMES teciocpp HINTS ${PACKAGE_PREFIX_DIR}/lib NO_DEFAULT_PATH)
+find_path(TECIOCPP_INCLUDE_DIR teciocpp.h HINTS ${PACKAGE_PREFIX_DIR}/include/teciocpp)
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(
+    teciocpp
+    REQUIRED_VARS TECIOCPP_LIBRARY TECIOCPP_INCLUDE_DIR
+)
+
+mark_as_advanced(
+    TECIOCPP_INCLUDE_DIR
+    TECIOCPP_LIBRARY
+)
