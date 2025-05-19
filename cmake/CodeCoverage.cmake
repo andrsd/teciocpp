@@ -1,13 +1,8 @@
-if(CMAKE_PROJECT_NAME STREQUAL "teciocpp")
-
 option(TECIOCPP_CODE_COVERAGE "Builds targets with code coverage instrumentation" OFF)
 
-if(TECIOCPP_CODE_COVERAGE)
-
+if (TECIOCPP_CODE_COVERAGE)
     set(COVERAGE_INFO ${PROJECT_BINARY_DIR}/coverage.info)
-    mark_as_advanced(FORCE
-        COVERAGE_INFO
-    )
+    mark_as_advanced(FORCE COVERAGE_INFO)
     set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_CLEAN_FILES "${COVERAGE_INFO}")
 
     if(CMAKE_C_COMPILER_ID MATCHES "(Apple)?[Cc]lang" OR CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?[Cc]lang")
@@ -47,20 +42,13 @@ if(TECIOCPP_CODE_COVERAGE)
 
         set(MERGED_PROFDATA ${PROJECT_BINARY_DIR}/all-merged.profdata)
 
-
         add_custom_target(coverage DEPENDS ${COVERAGE_INFO})
 
         add_custom_command(
             OUTPUT
                 ${COVERAGE_INFO}
             COMMAND
-                "${LLVM_COV_PATH}"
-                export
-                ${CODE_COVERAGE_BINS}
-                -instr-profile=${MERGED_PROFDATA}
-                -format="lcov"
-                ${EXCLUDE_REGEX}
-                > ${COVERAGE_INFO}
+                "${LLVM_COV_PATH}" export ${CODE_COVERAGE_BINS} -instr-profile=${MERGED_PROFDATA} -format="lcov" ${EXCLUDE_REGEX} > ${COVERAGE_INFO}
             DEPENDS
                 ${MERGED_PROFDATA}
         )
@@ -69,36 +57,19 @@ if(TECIOCPP_CODE_COVERAGE)
             OUTPUT
                 ${MERGED_PROFDATA}
             COMMAND
-                ${LLVM_PROFDATA_PATH}
-                merge
-                -sparse
-                ${CMAKE_BINARY_DIR}/test/teciocpp-test.profraw
-                -o ${MERGED_PROFDATA}
+                ${LLVM_PROFDATA_PATH} merge -sparse ${CMAKE_BINARY_DIR}/test/teciocpp-test.profraw -o ${MERGED_PROFDATA}
         )
 
-        add_custom_target(htmlcov DEPENDS ${PROJECT_BINARY_DIR}/htmlcov/index.html)
+        add_custom_target(htmlcov
+            DEPENDS ${PROJECT_BINARY_DIR}/htmlcov/index.html
+        )
         add_custom_command(
             OUTPUT
                 ${PROJECT_BINARY_DIR}/htmlcov/index.html
             COMMAND
-                ${LLVM_COV_PATH}
-                show
-                ${CODE_COVERAGE_BINS}
-                -instr-profile=${MERGED_PROFDATA}
-                -show-line-counts-or-regions
-                -output-dir=${CMAKE_BINARY_DIR}/htmlcov
-                -format="html"
-                ${EXCLUDE_REGEX}
+                ${LLVM_COV_PATH} show ${CODE_COVERAGE_BINS} -instr-profile=${MERGED_PROFDATA} -show-line-counts-or-regions -output-dir=${CMAKE_BINARY_DIR}/htmlcov -format="html" ${EXCLUDE_REGEX}
             DEPENDS
                 ${COVERAGE_INFO}
-        )
-
-        add_custom_command(
-            TARGET htmlcov
-            POST_BUILD
-            COMMAND ;
-            COMMENT
-                "Open ${PROJECT_BINARY_DIR}/htmlcov/index.html in your browser to view the coverage report."
         )
 
         function(target_code_coverage TARGET_NAME)
@@ -106,7 +77,7 @@ if(TECIOCPP_CODE_COVERAGE)
             target_link_options(${TARGET_NAME} PUBLIC -fprofile-instr-generate -fcoverage-mapping)
         endfunction()
 
-    elseif(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    elseif (CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
         find_program(GCOV_PATH NAMES gcov)
         find_program(LCOV_PATH lcov)
         find_program(GENHTML_PATH genhtml)
@@ -137,24 +108,17 @@ if(TECIOCPP_CODE_COVERAGE)
                 ${EXCLUDE_REGEX}
         )
 
-        add_custom_target(htmlcov DEPENDS ${PROJECT_BINARY_DIR}/htmlcov/index.html)
+        add_custom_target(htmlcov 
+            DEPENDS ${PROJECT_BINARY_DIR}/htmlcov/index.html
+            COMMENT "Open ${PROJECT_BINARY_DIR}/htmlcov/index.html in your browser to view the coverage report."
+        )
         add_custom_command(
             OUTPUT
                 ${PROJECT_BINARY_DIR}/htmlcov/index.html
             COMMAND
-                ${GENHTML_PATH}
-                --output-directory=${CMAKE_BINARY_DIR}/htmlcov
-                ${COVERAGE_INFO}
+                ${GENHTML_PATH} --output-directory=${CMAKE_BINARY_DIR}/htmlcov ${COVERAGE_INFO}
             DEPENDS
                 ${COVERAGE_INFO}
-        )
-
-        add_custom_command(
-            TARGET htmlcov
-            POST_BUILD
-            COMMAND ;
-            COMMENT
-                "Open ${PROJECT_BINARY_DIR}/htmlcov/index.html in your browser to view the coverage report."
         )
 
         function(target_code_coverage TARGET_NAME)
@@ -170,7 +134,5 @@ else()
 
     function(target_code_coverage TARGET_NAME)
     endfunction()
-
-endif()
 
 endif()
