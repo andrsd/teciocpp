@@ -20,6 +20,9 @@ option(TECIOCPP_BUILD_TESTS "Build tests" NO)
 option(TECIOCPP_BUILD_TOOLS "Build tools" YES)
 
 find_package(fmt 8.0 REQUIRED)
+if (TECIOCPP_WITH_MPI)
+    find_package(MPI REQUIRED)
+endif()
 
 if (TECIOCPP_BUILD_TESTS)
     FetchContent_Declare(

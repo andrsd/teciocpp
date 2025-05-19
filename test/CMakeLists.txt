@@ -26,6 +26,10 @@ target_link_libraries(
         gmock_main
 )
 
+if (TECIOCPP_WITH_MPI)
+    target_link_libraries(${PROJECT_NAME} PRIVATE teciompi MPI::MPI_C)
+endif()
+
 target_compile_definitions(${PROJECT_NAME}
     PRIVATE
         -DTECIOCPP_UNIT_TEST_ASSETS="${TECIOCPP_UNIT_TEST_ASSETS}"

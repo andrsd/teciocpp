@@ -5,15 +5,24 @@
 
 #include <stdexcept>
 #include <string>
+#include "fmt/format.h"
 
 namespace teciocpp {
 
-class Exception : public std::runtime_error {
+class Exception : public std::exception {
 public:
-    explicit Exception(const std::string & what_arg);
-    explicit Exception(const char * what_arg);
+    template <typename... T>
+    Exception(fmt::format_string<T...> format, T... args)
+    {
+        this->msg_ = fmt::format(format, std::forward<T>(args)...);
+    }
 
-protected:
+    /// Get the exception message
+    const char * what() const noexcept override;
+
+private:
+    /// Error message
+    std::string msg_;
 };
 
 } // namespace teciocpp

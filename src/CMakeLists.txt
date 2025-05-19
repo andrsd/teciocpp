@@ -1,6 +1,7 @@
 file(GLOB_RECURSE SRCS *.cpp)
 
 add_library(${PROJECT_NAME} SHARED ${SRCS})
+
 if (CMAKE_PROJECT_NAME STREQUAL "teciocpp")
     target_code_coverage(${PROJECT_NAME})
     target_sanitization(${PROJECT_NAME})
@@ -26,8 +27,17 @@ target_include_directories(
 target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
 
 if (TECIOCPP_WITH_MPI)
-    target_link_libraries(${PROJECT_NAME} PRIVATE teciompi)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE TECIOCPP_WITH_MPI TECIOMPI)
+    target_include_directories(${PROJECT_NAME}
+        PRIVATE
+            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/contrib/tecio/teciompisrc>
+    )
+    target_link_libraries(${PROJECT_NAME} PRIVATE teciompi MPI::MPI_C)
 else()
+    target_include_directories(${PROJECT_NAME}
+        PRIVATE
+            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/contrib/tecio/teciosrc>
+    )
     target_link_libraries(${PROJECT_NAME} PRIVATE tecio)
 endif()
 
