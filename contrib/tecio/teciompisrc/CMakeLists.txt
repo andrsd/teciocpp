@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.10)
 
 if (NOT CMAKE_BUILD_TYPE)
     set (CMAKE_BUILD_TYPE Release CACHE STRING "CMake build type (Debug|Release)" FORCE)
@@ -6,7 +6,7 @@ endif ()
 
 project (teciompi)
 
-FIND_PACKAGE(Boost 1.69.0)
+FIND_PACKAGE(Boost 1.69.0 CONFIG)
 IF (Boost_FOUND)
     INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 ELSE()
