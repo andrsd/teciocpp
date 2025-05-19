@@ -1,0 +1,5 @@
+if (TECIOCPP_WITH_MPI)
+    add_subdirectory(teciompisrc)
+else()
+    add_subdirectory(teciosrc)
+endif()

@@ -21,16 +21,16 @@ target_include_directories(
         $<INSTALL_INTERFACE:include>
     PRIVATE
         ${PROJECT_SOURCE_DIR}/include
-        $<BUILD_INTERFACE:${TECIO_INCLUDE_DIR}>
 )
 
-target_link_libraries(
-    ${PROJECT_NAME}
-    PUBLIC
-        fmt::fmt
-    PRIVATE
-        tecio::tecio
-)
+target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
+
+if (TECIOCPP_WITH_MPI)
+    target_link_libraries(${PROJECT_NAME} PRIVATE teciompi)
+else()
+    target_link_libraries(${PROJECT_NAME} PRIVATE tecio)
+endif()
+
 
 # Install
 

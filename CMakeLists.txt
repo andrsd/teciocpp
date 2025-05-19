@@ -15,17 +15,11 @@ include(GNUInstallDirs)
 include(CodeCoverage)
 include(Sanitization)
 
-set(LibraryTypeValues "SHARED;STATIC")
-if(NOT TECIOCPP_LIBRARY_TYPE)
-    set(TECIOCPP_LIBRARY_TYPE "SHARED" CACHE STRING "Build as a shared or static library." FORCE)
-endif()
-set_property(CACHE TECIOCPP_LIBRARY_TYPE PROPERTY STRINGS ${LibraryTypeValues})
-
+option(TECIOCPP_WITH_MPI "Build with MPI support" YES)
 option(TECIOCPP_BUILD_TESTS "Build tests" NO)
 option(TECIOCPP_BUILD_TOOLS "Build tools" YES)
 
 find_package(fmt 8.0 REQUIRED)
-find_package(TecIO REQUIRED)
 
 if (TECIOCPP_BUILD_TESTS)
     FetchContent_Declare(
@@ -50,6 +44,7 @@ if (TECIOCPP_BUILD_TESTS)
     )
 endif()
 
+add_subdirectory(contrib/tecio)
 add_subdirectory(src)
 
 # Tests
