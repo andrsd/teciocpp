@@ -74,6 +74,12 @@ value_location(ValueLocation val)
     }
 }
 
+int32_t
+bool_conversion(bool val)
+{
+    return val ? 1 : 0;
+}
+
 template <typename T, typename Fn>
 std::vector<int32_t>
 convert(const std::vector<T> & vals, Fn fn)
@@ -149,6 +155,71 @@ File::zone_create_fe(const std::string & zone_title,
                         &zone) != 0)
         throw Exception("Failed to write zone");
     return zone;
+}
+
+int32_t
+File::zone_create_fe(const std::string & zone_title,
+                     ZoneType zn_type,
+                     int64_t n_nodes,
+                     int64_t n_cells,
+                     const std::vector<ValueLocation> & value_locations,
+                     bool shared_connectivity)
+{
+    int32_t zone;
+    auto val_locs = convert(value_locations, value_location);
+    if (tecZoneCreateFE(this->handle_,
+                        zone_title.data(),
+                        zone_type(zn_type),
+                        n_nodes,
+                        n_cells,
+                        NULL,
+                        NULL,
+                        val_locs.data(),
+                        NULL,
+                        static_cast<int>(shared_connectivity),
+                        0,
+                        0,
+                        &zone) != 0)
+        throw Exception("Failed to write zone");
+
+    return zone;
+}
+
+int32_t
+File::zone_create_fe(const std::string & zone_title,
+                     ZoneType zn_type,
+                     int64_t n_nodes,
+                     int64_t n_cells,
+                     const std::vector<ValueLocation> & value_locations,
+                     bool shared_connectivity,
+                     const std::vector<bool> & shared_vars)
+{
+    int32_t zone;
+    auto val_locs = convert(value_locations, value_location);
+    auto shr_vars = convert(shared_vars, bool_conversion);
+    if (tecZoneCreateFE(this->handle_,
+                        zone_title.data(),
+                        zone_type(zn_type),
+                        n_nodes,
+                        n_cells,
+                        NULL,
+                        shr_vars.data(),
+                        val_locs.data(),
+                        NULL,
+                        static_cast<int>(shared_connectivity),
+                        0,
+                        0,
+                        &zone) != 0)
+        throw Exception("Failed to write zone");
+
+    return zone;
+}
+
+void
+File::set_unsteady_option(int32_t zone, double time, int32_t strand)
+{
+    if (tecZoneSetUnsteadyOptions(this->handle_, zone, time, strand) != 0)
+        throw Exception("Failed to write zone");
 }
 
 int32_t
@@ -233,6 +304,20 @@ File::zone_node_map_write(int32_t zone,
                               n,
                               connectivity.data()) != 0)
         throw Exception("Failed to write zone node map");
+}
+
+void
+File::flush(const std::vector<int32_t> & zones_to_retain)
+{
+    if (tecFileWriterFlush(this->handle_, zones_to_retain.size(), zones_to_retain.data()) != 0)
+        throw Exception("Failed to flush zones");
+}
+
+void
+File::add_aux_data(int32_t zone, const std::string & name, const std::string & value)
+{
+    if (tecZoneAddAuxData(this->handle_, zone, name.c_str(), value.c_str()) != 0)
+        throw Exception("Failed to write aux-data '{}'", name);
 }
 
 void

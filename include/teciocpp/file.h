@@ -59,6 +59,21 @@ public:
                            int64_t n_cells,
                            const std::vector<ValueLocation> & value_locations);
 
+    int32_t zone_create_fe(const std::string & zone_title,
+                           ZoneType type,
+                           int64_t n_nodes,
+                           int64_t n_cells,
+                           const std::vector<ValueLocation> & value_locations,
+                           bool shared_connectivity);
+
+    int32_t zone_create_fe(const std::string & zone_title,
+                           ZoneType type,
+                           int64_t n_nodes,
+                           int64_t n_cells,
+                           const std::vector<ValueLocation> & value_locations,
+                           bool shared_connectivity,
+                           const std::vector<bool> & shared_vars);
+
     int32_t zone_create_fe_mixed(const std::string & zone_title,
                                  int64_t n_nodes,
                                  const std::vector<int32_t> & cell_shapes,
@@ -100,6 +115,23 @@ public:
     /// @param connectivity Connectivity array
     void
     zone_node_map_write(int32_t zone, int32_t partition, const std::vector<int64_t> & connectivity);
+
+    /// Set unsteady option
+    ///
+    /// @param zone Zone ID
+    /// @param time Solution time
+    /// @param strand Strand ID
+    void set_unsteady_option(int32_t zone, double time, int32_t strand = 1);
+
+    /// Add auxiliary data
+    ///
+    /// @param zone Zone ID
+    /// @param name Name of the auxiliary data
+    /// @param value Value of the auxiliary data
+    void add_aux_data(int32_t zone, const std::string & name, const std::string & value);
+
+    ///
+    void flush(const std::vector<int32_t> & zones_to_retain);
 
     /// Close the file
     void close();
