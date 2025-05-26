@@ -4,7 +4,6 @@
 #pragma once
 
 #include "teciocpp/enums.h"
-#include "teciocpp/exception.h"
 #include <vector>
 #include <string>
 #include <mpi.h>
@@ -59,6 +58,14 @@ public:
                            int64_t n_cells,
                            const std::vector<ValueLocation> & value_locations);
 
+    /// Create FE zone
+    ///
+    /// @param title Zone title
+    /// @param type Zone type
+    /// @param n_nodes Number of nodes
+    /// @param n_cells Number of cells
+    /// @param value_locations Location of variable values
+    /// @param shared_connectivity Whether the connectivity is shared
     int32_t zone_create_fe(const std::string & zone_title,
                            ZoneType type,
                            int64_t n_nodes,
@@ -66,6 +73,15 @@ public:
                            const std::vector<ValueLocation> & value_locations,
                            bool shared_connectivity);
 
+    /// Create FE zone with shared variables
+    ///
+    /// @param title Zone title
+    /// @param type Zone type
+    /// @param n_nodes Number of nodes
+    /// @param n_cells Number of cells
+    /// @param value_locations Location of variable values
+    /// @param shared_connectivity Whether the connectivity is shared
+    /// @param shared_vars Whether the variables are shared
     int32_t zone_create_fe(const std::string & zone_title,
                            ZoneType type,
                            int64_t n_nodes,

@@ -15,25 +15,29 @@ namespace {
 int32_t
 file_format(File::Format format)
 {
-    if (format == File::Format::PLT)
+    switch (format) {
+    case File::Format::PLT:
         return FILEFORMAT_PLT;
-    else if (format == File::Format::SZPLT)
+    case File::Format::SZPLT:
         return FILEFORMAT_SZL;
-    else
+    default:
         throw Exception("Unknown file format");
+    }
 }
 
 int32_t
 file_type(File::Type type)
 {
-    if (type == File::Type::FULL)
+    switch (type) {
+    case File::Type::FULL:
         return FILETYPE_FULL;
-    else if (type == File::Type::GRID)
+    case File::Type::GRID:
         return FILETYPE_GRID;
-    else if (type == File::Type::SOLUTION)
+    case File::Type::SOLUTION:
         return FILETYPE_SOLUTION;
-    else
+    default:
         throw Exception("Unknown file type");
+    }
 }
 
 int32_t
