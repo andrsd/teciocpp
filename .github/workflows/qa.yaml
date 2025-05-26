@@ -1,0 +1,63 @@
+name: qa
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  cpp-linter:
+    name: c++ linter
+    defaults:
+      run:
+        shell: bash -el {0}
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Set up miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          python-version: 3.9
+          auto-update-conda: false
+          channels: andrsd,defaults
+
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          conda install \
+            cmake \
+            make \
+            mpich-mpicxx \
+            fmt==9.1.0 \
+            yaml-cpp==0.8.0 \
+            boost
+
+      - name: Configure
+        run: |
+          cmake -S ${{ github.workspace }} -B ${{ github.workspace }}/build \
+            -DTECIOCPP_WITH_MPI=YES \
+            -DTECIOCPP_BUILD_TESTS=YES \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=on
+
+      - uses: cpp-linter/cpp-linter-action@v2
+        with:
+          style: file
+          tidy-checks: ""
+          version: 14
+          lines-changed-only: true
+          ignore: "contrib"
+          step-summary: true
+          database: build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  check-spdx-tags:
+    name: check spdx tags
+    defaults:
+      run:
+        shell: bash -el {0}
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: kt3k/license_checker@v1.0.6
