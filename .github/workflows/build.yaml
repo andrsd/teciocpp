@@ -1,0 +1,96 @@
+name: build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: "${{ matrix.os }}, ${{ matrix.build }}"
+    defaults:
+      run:
+        shell: bash -el {0}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-22.04
+            build: Debug
+          - os: ubuntu-22.04
+            build: Release
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Set up miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          python-version: 3.9
+          auto-update-conda: false
+          channels: andrsd,defaults
+
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          conda install \
+            cmake \
+            make \
+            mpich-mpicxx \
+            fmt==9.1.0 \
+            yaml-cpp=0.8.0 \
+            boost \
+            lcov
+
+      - name: Configure
+        run: |
+          cmake -S ${{ github.workspace }} -B ${{ github.workspace }}/build \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build }} \
+            -DTECIOCPP_WITH_MPI=YES \
+            -DTECIOCPP_BUILD_TESTS=YES \
+            -DTECIOCPP_CODE_COVERAGE=YES
+
+      - name: Build
+        run: make -C ${{ github.workspace }}/build
+
+      - name: Run tests
+        run: |
+          echo "### Test results" >> $GITHUB_STEP_SUMMARY
+          ctest --test-dir ${{ github.workspace }}/build -O test.log
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          awk 's;/^\[HANDLER_OUTPUT\]/{s=1}' test.log >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload test result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.os }}-${{ matrix.build }}-petsc-${{ matrix.petsc }}
+          path: ${{ github.workspace }}/build/Testing/Temporary/LastTest.log
+
+      - name: Generate code coverage
+        run: make -C ${{ github.workspace }}/build coverage
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.os }}-${{ matrix.build }}-petsc-${{ matrix.petsc }}
+          path: ${{ github.workspace }}/build/coverage.info
+
+  upload-to-codecov:
+    needs: [build]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
