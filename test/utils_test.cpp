@@ -1,5 +1,5 @@
 #include <gmock/gmock.h>
-#include "teciocpp/utils.h"
+#include "teciocpp/teciocpp.h"
 
 using namespace teciocpp;
 

@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "teciocpp/enums.h"
+#include "enums.h"
 #include <vector>
 #include <string>
 #include <mpi.h>
