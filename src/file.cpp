@@ -6,6 +6,7 @@
 #include "teciocpp/exception.h"
 #include "teciocpp/utils.h"
 #include "TECIO.h"
+#include <algorithm>
 #include <cassert>
 
 namespace teciocpp {
