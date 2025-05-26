@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2025 David Andrs <andrsd@gmail.com>
 // SPDX-License-Identifier: MIT
 
-#include "teciocpp/exception.h"
+#include "teciocpp/impl/exception.h"
 
 namespace teciocpp {
 

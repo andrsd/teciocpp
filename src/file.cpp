@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: 2025 David Andrs <andrsd@gmail.com>
 // SPDX-License-Identifier: MIT
 
-#include "teciocpp/file.h"
-#include "teciocpp/enums.h"
-#include "teciocpp/exception.h"
-#include "teciocpp/utils.h"
+#include "teciocpp/impl/file.h"
+#include "teciocpp/impl/enums.h"
+#include "teciocpp/impl/exception.h"
+#include "teciocpp/impl/utils.h"
 #include "TECIO.h"
 #include <algorithm>
 #include <cassert>

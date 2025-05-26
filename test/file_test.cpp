@@ -1,8 +1,6 @@
 #include <gmock/gmock.h>
 #include <mpi.h>
-#include <mpi_proto.h>
-#include "teciocpp/enums.h"
-#include "teciocpp/file.h"
+#include "teciocpp/teciocpp.h"
 
 using namespace teciocpp;
 
