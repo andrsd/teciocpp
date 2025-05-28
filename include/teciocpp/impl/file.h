@@ -36,6 +36,11 @@ public:
     /// @param type File type
     File(MPI_Comm comm, Format format = Format::SZPLT, Type type = Type::FULL);
 
+    /// Set if nodes are one-based ot not
+    ///
+    /// @param state `true` to set one-based indices, `false` for zero-based ones.
+    void set_one_based(bool state);
+
     /// Create a new file
     ///
     /// @param file_name File name
@@ -167,6 +172,8 @@ private:
     std::string file_name_;
     /// file handle
     void * handle_;
+    /// Are indices one-based or not
+    bool one_based_;
 };
 
 } // namespace teciocpp

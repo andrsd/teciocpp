@@ -53,7 +53,7 @@ TEST(FileTest, zone_fe_transient)
         { 1., 1.5, 2., 5., 7.5, 10. },
         { 2., 2.5, 3., 6., 8.5, 11. },
     };
-    std::vector<int32_t> connectivity = { 1, 2, 5, 4, 2, 3, 6, 5 };
+    std::vector<int32_t> connectivity = { 0, 1, 4, 3, 1, 2, 5, 4 };
     std::vector<bool> shared_vars = { true, true, false };
 
     int32_t n_nodes = 6;
@@ -63,6 +63,7 @@ TEST(FileTest, zone_fe_transient)
                                               ValueLocation::NODAL };
 
     File f(comm);
+    f.set_one_based(false);
     f.create("test_fe_trans.szplt", "Title", var_names);
 
     // time step 1
