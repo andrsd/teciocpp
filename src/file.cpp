@@ -100,11 +100,18 @@ File::File(MPI_Comm comm, Format format, Type type) :
     comm_(comm),
     file_format_(format),
     file_type_(type),
-    handle_(nullptr)
+    handle_(nullptr),
+    one_based_(true)
 {
 #if !defined TECIOCPP_WITH_MPI
     throw Exception("teciocpp was not built with MPI support");
 #endif
+}
+
+void
+File::set_one_based(bool state)
+{
+    this->one_based_ = state;
 }
 
 void
@@ -284,12 +291,11 @@ File::zone_node_map_write(int32_t zone,
                           int32_t partition,
                           const std::vector<int32_t> & connectivity)
 {
-    int32_t nodes_are_one_based = 1;
     int64_t n = connectivity.size();
     if (tecZoneNodeMapWrite32(this->handle_,
                               zone,
                               partition,
-                              nodes_are_one_based,
+                              this->one_based_ ? 1 : 0,
                               n,
                               connectivity.data()) != 0)
         throw Exception("Failed to write zone node map");
@@ -300,12 +306,11 @@ File::zone_node_map_write(int32_t zone,
                           int32_t partition,
                           const std::vector<int64_t> & connectivity)
 {
-    int32_t nodes_are_one_based = 1;
     int64_t n = connectivity.size();
     if (tecZoneNodeMapWrite64(this->handle_,
                               zone,
                               partition,
-                              nodes_are_one_based,
+                              this->one_based_ ? 1 : 0,
                               n,
                               connectivity.data()) != 0)
         throw Exception("Failed to write zone node map");
