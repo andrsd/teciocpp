@@ -48,6 +48,7 @@ jobs:
       - name: Configure
         run: |
           cmake -S ${{ github.workspace }} -B ${{ github.workspace }}/build \
+            -DGCOV_PATH=`which x86_64-conda-linux-gnu-gcov` \
             -DCMAKE_BUILD_TYPE=${{ matrix.build }} \
             -DTECIOCPP_WITH_MPI=YES \
             -DTECIOCPP_BUILD_TESTS=YES \
