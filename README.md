@@ -10,6 +10,6 @@ C++17 wrapper for TecIO (input/output module for tecplot)
 
 ## Prerequisites
 
-- fmt 8.0+
+- fmt 11.x
 - MPI (optional)
 - boost
