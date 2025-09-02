@@ -56,7 +56,7 @@ write_basic_package_version_file(teciocpp-config-version.cmake
 
 install(
     TARGETS teciocpp
-    EXPORT teciocppTargets
+    EXPORT teciocpp-targets
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
@@ -71,7 +71,7 @@ install(
 )
 
 install(
-    EXPORT teciocppTargets
+    EXPORT teciocpp-targets
     FILE teciocpp-targets.cmake
     NAMESPACE teciocpp::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/teciocpp
