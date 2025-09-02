@@ -1,9 +1,9 @@
 project(teciocpp-test)
 
-include(GoogleTest)
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+find_package(GTest REQUIRED)
 
 file(GLOB_RECURSE SRCS *.cpp)
 
@@ -22,8 +22,7 @@ target_link_libraries(
     ${PROJECT_NAME}
     PUBLIC
         teciocpp
-        gtest_main
-        gmock_main
+        GTest::gmock_main
 )
 
 if (TECIOCPP_WITH_MPI)
