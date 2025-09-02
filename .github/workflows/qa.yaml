@@ -30,6 +30,7 @@ jobs:
             mpich-mpicxx \
             fmt=11.* \
             yaml-cpp==0.8.0 \
+            gtest \
             boost
 
       - name: Configure
