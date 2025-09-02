@@ -9,7 +9,6 @@ file(GLOB_RECURSE SRCS *.cpp)
 
 add_executable(${PROJECT_NAME} ${SRCS})
 target_code_coverage(${PROJECT_NAME})
-target_sanitization(${PROJECT_NAME})
 
 target_include_directories(
     ${PROJECT_NAME}

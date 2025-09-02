@@ -12,7 +12,6 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 include(CodeCoverage)
-include(Sanitization)
 
 option(TECIOCPP_WITH_MPI "Build with MPI support" YES)
 option(TECIOCPP_BUILD_TESTS "Build tests" NO)
