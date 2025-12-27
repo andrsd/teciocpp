@@ -25,6 +25,8 @@ target_include_directories(
 
 target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
 
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+
 if (TECIOCPP_WITH_MPI)
     target_compile_definitions(${PROJECT_NAME} PRIVATE TECIOCPP_WITH_MPI TECIOMPI)
     target_include_directories(${PROJECT_NAME}
