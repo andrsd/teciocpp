@@ -1,8 +1,5 @@
 project(teciocpp-test)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-
 find_package(GTest REQUIRED)
 
 file(GLOB_RECURSE SRCS *.cpp)
@@ -16,6 +13,8 @@ target_include_directories(
         ${CMAKE_SOURCE_DIR}/include
         ${PROJECT_BINARY_DIR}
 )
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 target_link_libraries(
     ${PROJECT_NAME}

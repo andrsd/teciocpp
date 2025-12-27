@@ -31,7 +31,7 @@ jobs:
             fmt=11.* \
             yaml-cpp==0.8.0 \
             gtest \
-            boost
+            libboost-devel
 
       - name: Configure
         run: |

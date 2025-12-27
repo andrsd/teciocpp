@@ -42,7 +42,7 @@ jobs:
             mpich-mpicxx \
             fmt=11.* \
             yaml-cpp=0.8.0 \
-            boost \
+            libboost-devel \
             gtest \
             lcov
 
